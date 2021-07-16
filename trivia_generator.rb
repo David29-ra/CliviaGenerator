@@ -15,12 +15,20 @@ class TriviaGenerator
     # welcome message
     puts say_welcome
     # prompt the user for an action
-    select_main_menu_action
+    action = ""
     # keep going until the user types exit
+    until action == "exit"
+      action = select_main_menu
+      case action
+      when "random" then random_trivia
+      when "scores" then print_scores
+      end
+    end
+    puts "Bye"
   end
 
   def random_trivia
-    # load the questions from the api
+    puts "load the questions from the api"
     # questions are loaded, then let's ask them
   end
 
@@ -49,7 +57,7 @@ class TriviaGenerator
   end
 
   def print_scores
-    # print the scores sorted from top to bottom
+    puts "print the scores sorted from top to bottom"
   end
 end
 

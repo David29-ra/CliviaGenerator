@@ -1,5 +1,5 @@
 module Requester
-  def select_main_menu_action
+  def select_main_menu
     # prompt the user for the "random | scores | exit" actions
     gets_option(%w[random scores exit])
   end
