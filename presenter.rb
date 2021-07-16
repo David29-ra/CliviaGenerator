@@ -1,6 +1,9 @@
 module Presenter
-  def print_welcome
-    # print the welcome message
+  def say_welcome
+    say_hi = ["###################################",
+              "#   Welcome to Trivia Generator   #",
+              "###################################"]
+    say_hi.join("\n")
   end
 
   def print_score(score)
