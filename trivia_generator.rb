@@ -13,14 +13,12 @@ class TriviaGenerator
   def initialize
     # we need to initialize a couple of properties here
     @coder = HTMLEntities.new
+    @score = 0
   end
 
   def start
-    # welcome message
     puts say_welcome
-    # prompt the user for an action
     action = ""
-    # keep going until the user types exit
     until action == "exit"
       action = select_main_menu
       case action
@@ -36,18 +34,13 @@ class TriviaGenerator
     questions = load_questions[:results]
     # pp questions
     ask_questions(questions)
-    # questions are loaded, then let's ask them
   end
 
   def ask_questions(questions)
-    # mix answer
-    # ask each question
-    # if response is correct, put a correct message and increase score
-    # if response is incorrect, put an incorrect message, and which was the correct answer
-    # once the questions end, show user's score and promp to save it
     questions.each do |question|
-      ask_question(question)
+      @score = ask_question(question, @score, @coder)
     end
+    puts @score * 10
   end
 
   def save(data)
@@ -73,6 +66,3 @@ class TriviaGenerator
     puts "print the scores sorted from top to bottom"
   end
 end
-
-trivia = TriviaGenerator.new
-trivia.start
