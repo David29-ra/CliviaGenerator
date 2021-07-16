@@ -6,9 +6,17 @@ module Requester
 
   def ask_question(question)
     # show category and difficulty from question
+    puts "Category: #{question[:category]}  | Difficulty: #{question[:difficulty]}"
     # show the question
+    puts "Question: #{question[:question]}"
     # show each one of the options
+    mix = (question[:incorrect_answers] << question[:correct_answer]).shuffle
+    mix.each_with_index { |x, y| puts "#{y + 1}. #{x}" }
     # grab user input
+    puts "(#{question[:correct_answer]})"
+    print "> "
+    answer = gets.chomp.to_i
+    question[:correct_answer].strip == mix[answer - 1] ? (p "correct answer") : (p "incorrect answer")
   end
 
   def will_save?(score)
