@@ -4,19 +4,14 @@ module Requester
     gets_option(%w[random scores exit])
   end
 
-  def ask_question(question)
-    # show category and difficulty from question
+  def ask_question(question, score, coder)
     puts "Category: #{question[:category]}  | Difficulty: #{question[:difficulty]}"
-    # show the question
-    puts "Question: #{question[:question]}"
-    # show each one of the options
+    puts coder.decode("Question: #{question[:question]}")
     mix = (question[:incorrect_answers] << question[:correct_answer]).shuffle
-    mix.each_with_index { |x, y| puts "#{y + 1}. #{x}" }
-    # grab user input
+    mix.each_with_index { |x, y| puts "#{y + 1}. #{coder.decode(x)}" }
     puts "(#{question[:correct_answer]})"
     print "> "
-    answer = gets.chomp.to_i
-    question[:correct_answer].strip == mix[answer - 1] ? (p "correct answer") : (p "incorrect answer")
+    correct_or_incorrect(question, mix, score)
   end
 
   def will_save?(score)
@@ -31,16 +26,27 @@ module Requester
   end
 
   def gets_option(options)
-    # prompt for an input
     puts options.join(" | ")
     print "> "
     input = gets.chomp.strip.downcase
-    # keep going until the user gives a valid option
     until options.include?(input)
       puts "Invalid option"
       print "> "
       input = gets.chomp.strip.downcase
     end
     input
+  end
+
+  def correct_or_incorrect(question, mix, score)
+    answer = gets.chomp.to_i
+    if question[:correct_answer].strip == mix[answer - 1]
+      puts "Well Done\n\n"
+      score += 1
+    else
+      puts "#{mix[answer - 1]}...Incorrect"
+      puts "Burrazo"
+      puts "The correct answer was: #{question[:correct_answer]}\n\n"
+    end
+    score
   end
 end
