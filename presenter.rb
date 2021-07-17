@@ -15,9 +15,7 @@ module Presenter
     table = Terminal::Table.new
     table.title = "Top Scores"
     table.headings = %w[Name Score]
-    table.rows = scores.map do |score|
-      [score["name"], score["points"]]
-    end
+    table.rows = scores.select.each_with_index { |_, i| i < 5 }
     table
   end
 end

@@ -65,7 +65,13 @@ class TriviaGenerator
 
   def print_scores
     puts "print the scores sorted from top to bottom"
+    puts scores_table(order_first)
+  end
+
+  def order_first
     top_to_bottom = @scores.sort { |x, y| y["points"] <=> x["points"] }
-    puts scores_table(top_to_bottom)
+    top_to_bottom.map do |score|
+      [score["name"], score["points"]]
+    end
   end
 end
