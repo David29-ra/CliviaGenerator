@@ -1,25 +1,25 @@
-# do not forget to require your gem dependencies
 require "httparty"
 require "htmlentities"
-# do not forget to require_relative your local dependencies
+require "colorize"
+require "json"
+require "terminal-table"
 require_relative "./presenter"
 require_relative "./requester"
+
 class TriviaGenerator
-  # maybe we need to include a couple of modules?
   include Presenter
   include Requester
-  # include Httparty
 
-  def initialize
-    # we need to initialize a couple of properties here
+  def initialize(filename = "score.json")
     @coder = HTMLEntities.new
-    @score = 0
+    @filename = filename
+    @scores = File.read(@filename).empty? ? [] : JSON.parse(File.read(@filename))
   end
 
   def start
-    puts say_welcome
     action = ""
     until action == "exit"
+      puts say_welcome
       action = select_main_menu
       case action
       when "random" then random_trivia
@@ -30,39 +30,46 @@ class TriviaGenerator
   end
 
   def random_trivia
-    puts "load the questions from the api"
-    questions = load_questions[:results]
-    # pp questions
-    ask_questions(questions)
+    @score = 0
+    @questions = load_questions[:results]
+    print "\n"
+    ask_questions
   end
 
-  def ask_questions(questions)
-    questions.each do |question|
+  def ask_questions
+    @questions.each do |question|
       @score = ask_question(question, @score, @coder)
     end
-    puts @score * 10
+    @name = will_save?(@score * 10)
+    save
   end
 
-  def save(data)
-    # write to file the scores data
+  def save
+    new_score = { name: @name, points: @score * 10 }
+    p new_score[:name]
+    @scores << new_score
+    File.open(@filename, "w") { |file| file.write @top.to_json }
   end
 
   def parse_scores
-    # get the scores data from file
+    # @scores = File.read(@filename).empty? ? [] : JSON.parse(File.read(@filename))
   end
 
   def load_questions
-    # ask the api for a random set of questions
     parse_questions(HTTParty.get("https://opentdb.com/api.php?amount=3"))
   end
 
   def parse_questions(response)
-    # questions came with an unexpected structure, clean them to make it usable for our purposes
-    # JSON.parse(response.body.gsub(/&quot;/, "'"), symbolize_names: true) if response.body
     JSON.parse(response.body, symbolize_names: true) if response.body
   end
 
   def print_scores
     puts "print the scores sorted from top to bottom"
+    p @scores.class
+    puts scores_table(top_scores)
   end
+
+  # def top_scores
+  #   @scores.sort { |x, y| y[:points] <=> x[:points] }
+  # end
 end
