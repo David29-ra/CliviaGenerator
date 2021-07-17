@@ -15,7 +15,9 @@ module Requester
   def will_save?(score)
     print_score(score)
     puts "-".cyan * 50
-    save_action == "y" ? name = receive_name : start
+    save_action == "y" ? name = receive_name : false
+    return "" if name.nil?
+
     name.empty? ? "Anonymous" : name
   end
 
@@ -32,10 +34,6 @@ module Requester
     puts "Type the name to assign to the score"
     print "> "
     gets.chomp
-  end
-
-  def get_number(max: 100_000)
-    # prompt the user for a number between 1 and the maximum number of options
   end
 
   def gets_option(options)
