@@ -5,6 +5,7 @@ require "json"
 require "terminal-table"
 require_relative "./presenter"
 require_relative "./requester"
+require_relative "./custom"
 
 class TriviaGenerator
   include Presenter
@@ -24,6 +25,7 @@ class TriviaGenerator
       action = select_main_menu
       case action
       when "random" then random_trivia
+      when "custom" then custom
       when "scores" then print_scores
       end
     end
