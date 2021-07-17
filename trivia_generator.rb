@@ -52,7 +52,7 @@ class TriviaGenerator
   end
 
   def load_questions
-    parse_questions(HTTParty.get("https://opentdb.com/api.php?amount=3"))
+    parse_questions(HTTParty.get("https://opentdb.com/api.php?amount=10"))
   end
 
   def parse_questions(response)
