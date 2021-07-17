@@ -10,8 +10,9 @@ require_relative "./custom"
 class TriviaGenerator
   include Presenter
   include Requester
+  include Bonus
 
-  def initialize(filename = "scores.json")
+  def initialize(filename)
     @coder = HTMLEntities.new
     @filename = filename
     File.open(@filename, "w") unless File.exist?(@filename)
@@ -39,12 +40,21 @@ class TriviaGenerator
     ask_questions
   end
 
+  def custom
+    @score = 0
+    category = validation_category
+    difficulty = validation_difficulty
+    @questions = load_questions(category, difficulty)[:results]
+    print "\n"
+    ask_questions
+  end
+
   def ask_questions
     @questions.each do |question|
       @score = ask_question(question, @score, @coder)
     end
     @name = will_save?(@score * 10)
-    save
+    save unless @name == ""
   end
 
   def save
@@ -53,8 +63,9 @@ class TriviaGenerator
     File.open(@filename, "w") { |file| file.write @scores.to_json }
   end
 
-  def load_questions
-    parse_questions(HTTParty.get("https://opentdb.com/api.php?amount=10"))
+  def load_questions(category = nil, difficulty = nil, amount = 10)
+    load = HTTParty.get("https://opentdb.com/api.php?amount=#{amount}&category=#{category}&difficulty=#{difficulty}")
+    parse_questions(load)
   end
 
   def parse_questions(response)
@@ -66,7 +77,7 @@ class TriviaGenerator
   end
 
   def order_first
-    top_to_bottom = @scores.sort { |x, y| y["points"] <=> x["points"] }
+    top_to_bottom = @scores.sort { |x, y| y[:points] <=> x[:points] }
     top_to_bottom.map do |score|
       [score[:name], score[:points]]
     end

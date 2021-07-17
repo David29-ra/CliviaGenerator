@@ -4,7 +4,7 @@ require_relative "./trivia_generator"
 new_file = ARGV.shift
 
 def file_extension?(new_file)
-  return puts("---Enter an file valid---".red) unless new_file.nil? || (!new_file.nil? && new_file.match?("json"))
+  return puts("---Enter an file valid---".yellow) unless new_file.nil? || (!new_file.nil? && new_file.match?("json"))
 
   true
 end
