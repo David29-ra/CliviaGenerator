@@ -10,7 +10,7 @@ class TriviaGenerator
   include Presenter
   include Requester
 
-  def initialize(filename = "score.json")
+  def initialize(filename = "scores.json")
     @coder = HTMLEntities.new
     @filename = filename
     @scores = File.read(@filename).empty? ? [] : JSON.parse(File.read(@filename))
@@ -49,10 +49,6 @@ class TriviaGenerator
     p new_score[:name]
     @scores << new_score
     File.open(@filename, "w") { |file| file.write @top.to_json }
-  end
-
-  def parse_scores
-    # @scores = File.read(@filename).empty? ? [] : JSON.parse(File.read(@filename))
   end
 
   def load_questions
