@@ -64,7 +64,7 @@ class TriviaGenerator
   end
 
   def order_first
-    top_to_bottom = @scores.sort { |x, y| y["points"] <=> x["points"] }
+    top_to_bottom = @scores.sort { |x, y| y[:points] <=> x[:points] }
     top_to_bottom.map do |score|
       [score[:name], score[:points]]
     end
