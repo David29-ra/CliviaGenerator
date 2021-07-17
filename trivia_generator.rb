@@ -13,6 +13,7 @@ class TriviaGenerator
   def initialize(filename = "scores.json")
     @coder = HTMLEntities.new
     @filename = filename
+    File.open(@filename, "w") unless File.exist?(@filename)
     @scores = File.read(@filename).empty? ? [] : JSON.parse(File.read(@filename), symbolize_names: true)
   end
 

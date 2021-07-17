@@ -1,6 +1,6 @@
 module Requester
   def select_main_menu
-    gets_option(%w[random scores exit])
+    gets_option(%w[random custom scores exit])
   end
 
   def ask_question(question, score, coder)
