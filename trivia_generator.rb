@@ -13,7 +13,7 @@ class TriviaGenerator
   def initialize(filename = "scores.json")
     @coder = HTMLEntities.new
     @filename = filename
-    @scores = File.read(@filename).empty? ? [] : JSON.parse(File.read(@filename))
+    @scores = File.read(@filename).empty? ? [] : JSON.parse(File.read(@filename), symbolize_names: true)
   end
 
   def start
@@ -46,9 +46,8 @@ class TriviaGenerator
 
   def save
     new_score = { name: @name, points: @score * 10 }
-    p new_score[:name]
     @scores << new_score
-    File.open(@filename, "w") { |file| file.write @top.to_json }
+    File.open(@filename, "w") { |file| file.write @scores.to_json }
   end
 
   def load_questions
@@ -60,14 +59,13 @@ class TriviaGenerator
   end
 
   def print_scores
-    puts "print the scores sorted from top to bottom"
     puts scores_table(order_first)
   end
 
   def order_first
     top_to_bottom = @scores.sort { |x, y| y["points"] <=> x["points"] }
     top_to_bottom.map do |score|
-      [score["name"], score["points"]]
+      [score[:name], score[:points]]
     end
   end
 end

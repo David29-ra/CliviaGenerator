@@ -8,7 +8,6 @@ module Requester
     puts coder.decode("Question: #{question[:question]}")
     mix = (question[:incorrect_answers] << question[:correct_answer]).shuffle
     mix.each_with_index { |x, y| puts "#{y + 1}. #{coder.decode(x)}" }
-    puts "(#{question[:correct_answer]})"
     print "> "
     correct_or_incorrect(question, mix, score, coder)
   end
@@ -58,7 +57,6 @@ module Requester
       score += 1
     else
       puts "#{mix[answer - 1]}... Incorrect!"
-      puts "Burrazo"
       puts "The correct answer was: #{coder.decode(question[:correct_answer])}\n\n"
     end
     score
