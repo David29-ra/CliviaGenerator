@@ -1,55 +1,77 @@
-# do not forget to require your gem dependencies
-# do not forget to require_relative your local dependencies
+require "httparty"
+require "htmlentities"
+require "colorize"
+require "json"
+require "terminal-table"
 require_relative "./presenter"
+require_relative "./requester"
 
 class TriviaGenerator
-  # maybe we need to include a couple of modules?
   include Presenter
+  include Requester
 
-  def initialize
-    # we need to initialize a couple of properties here
+  def initialize(filename = "score.json")
+    @coder = HTMLEntities.new
+    @filename = filename
+    @scores = File.read(@filename).empty? ? [] : JSON.parse(File.read(@filename))
   end
 
   def start
-    # welcome message
-    puts say_welcome
-    # prompt the user for an action
-    # keep going until the user types exit
+    action = ""
+    until action == "exit"
+      puts say_welcome
+      action = select_main_menu
+      case action
+      when "random" then random_trivia
+      when "scores" then print_scores
+      end
+    end
+    puts "Bye"
   end
 
   def random_trivia
-    # load the questions from the api
-    # questions are loaded, then let's ask them
+    @score = 0
+    @questions = load_questions[:results]
+    print "\n"
+    ask_questions
   end
 
   def ask_questions
-    # ask each question
-    # if response is correct, put a correct message and increase score
-    # if response is incorrect, put an incorrect message, and which was the correct answer
-    # once the questions end, show user's score and promp to save it
+    @questions.each do |question|
+      @score = ask_question(question, @score, @coder)
+    end
+    @name = will_save?(@score * 10)
+    save
   end
 
-  def save(data)
-    # write to file the scores data
+  def save
+    new_score = { name: @name, points: @score * 10 }
+    p new_score[:name]
+    @scores << new_score
+    File.open(@filename, "w") { |file| file.write @top.to_json }
   end
 
   def parse_scores
-    # get the scores data from file
+    # @scores = File.read(@filename).empty? ? [] : JSON.parse(File.read(@filename))
   end
 
   def load_questions
-    # ask the api for a random set of questions
-    parse_questions
+    parse_questions(HTTParty.get("https://opentdb.com/api.php?amount=3"))
   end
 
-  def parse_questions
-    # questions came with an unexpected structure, clean them to make it usable for our purposes
+  def parse_questions(response)
+    JSON.parse(response.body, symbolize_names: true) if response.body
   end
 
   def print_scores
-    # print the scores sorted from top to bottom
+    puts "print the scores sorted from top to bottom"
+    puts scores_table(order_first)
+  end
+
+  def order_first
+    top_to_bottom = @scores.sort { |x, y| y["points"] <=> x["points"] }
+    top_to_bottom.map do |score|
+      [score["name"], score["points"]]
+    end
   end
 end
-
-trivia = TriviaGenerator.new
-trivia.start
