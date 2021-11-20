@@ -1,4 +1,4 @@
-# CLIvia generator
+# Clivia Generator
 
 This is a Project develop with ruby, it is a game about Questions of differents topics.
 
