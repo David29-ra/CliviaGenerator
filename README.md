@@ -24,7 +24,10 @@ random | custom | scores | exit
 
 1. Install ruby
 2. install ruby-bundler
-3. Run bundle install on terminal
+3. Run bundle install on terminal to install gems
+```ruby
+$ bundle install
+```
 
 ## To Start
 
