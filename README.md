@@ -32,7 +32,7 @@ $ bundle install
 ## To Start
 
 1. Run
-```powershell
+```ruby
 $ ruby main.rb
 ```
 
