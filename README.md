@@ -4,13 +4,13 @@ This is a Project develop with ruby, it is a game about Questions of differents 
 
 In the menú you can write options:
 
-random: It shows 10 questions in random way.
+* random: It shows 10 questions in random way.
 
-custom: You write the topic and difficulty then it shows 10 questions.
+* custom: You write the topic and difficulty then it shows 10 questions.
 
-scores: If you save your score, then you can see it in that option.
+* scores: If you save your score, then you can see it in that option.
 
-exit: Exit the game.
+* exit: Exit the game.
 
 ```
 ###################################
@@ -37,7 +37,7 @@ $ ruby main.rb
 
 ### On Linux/MacOS
 
-2. From the VS Code terminal run the next docker command
+1. From the VS Code terminal run the next docker command
 
 ```powershell
 docker container run \
@@ -98,4 +98,4 @@ Ready, you can enjoy!
 
 <br/><br/>
 
-<div style="text-align:center; font-style: oblique;">Made by Monito Inc. 🙊</div>
+*Made by Monito Inc. 🙊*
